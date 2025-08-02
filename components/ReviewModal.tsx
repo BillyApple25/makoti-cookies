@@ -46,10 +46,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   useEffect(() => {
     const checkUserCanReview = async () => {
       if (!isOpen || !userId) return;
-      
+
       setIsCheckingOrder(true);
       setError('');
-      
+
       try {
         const reviewableProducts = await ReviewService.getProductsUserCanReview(userId);
         setHasUserOrdered(reviewableProducts.includes(productId));
@@ -65,7 +65,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     checkUserCanReview();
   }, [isOpen, userId, productId]);
 
-  // Réinitialiser le formulaire quand le modal s'ouvre
   useEffect(() => {
     if (isOpen) {
       setFormData({ rating: 0, comment: '' });
@@ -85,7 +84,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!hasUserOrdered) {
       setError('Vous devez avoir commandé ce produit pour laisser un avis');
       return;
@@ -105,9 +104,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
     setError('');
 
     try {
-      // Récupérer les commandes pour obtenir l'orderId
       const userOrders = await OrderService.getOrdersReadyForReview(userId);
-      const orderWithProduct = userOrders.find(order => 
+      const orderWithProduct = userOrders.find(order =>
         order.items.some(item => item.productId === productId)
       );
 
@@ -127,15 +125,9 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
       await ReviewService.addReview(reviewData);
 
-      // Réinitialiser le formulaire
       setFormData({ rating: 0, comment: '' });
-      
-      // Notifier le parent
       onReviewSubmitted();
-      
-      // Fermer le modal
       onClose();
-      
     } catch (error) {
       console.error('Erreur lors de la soumission:', error);
       setError(error instanceof Error ? error.message : 'Erreur lors de l\'envoi de votre avis');
@@ -154,17 +146,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      {/* Overlay */}
-      <div 
+      <div
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
         onClick={handleClose}
       />
-      
-      {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div className="relative w-full max-w-md transform rounded-2xl bg-white p-6 shadow-xl transition-all">
-          
-          {/* Header */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-gray-900">
@@ -181,11 +168,10 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
               </button>
             </div>
 
-            {/* Produit */}
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
               {productImage && (
-                <img 
-                  src={productImage} 
+                <img
+                  src={productImage}
                   alt={productName}
                   className="w-12 h-12 object-cover rounded-lg"
                 />
@@ -197,7 +183,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             </div>
           </div>
 
-          {/* Contenu */}
           {isCheckingOrder ? (
             <div className="text-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600 mx-auto mb-4"></div>
@@ -210,9 +195,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">
-                Avis non autorisé
-              </h4>
+              <h4 className="text-lg font-semibold text-gray-900 mb-2">Avis non autorisé</h4>
               <p className="text-gray-500 mb-6">
                 Vous devez avoir commandé et reçu ce produit pour pouvoir laisser un avis.
               </p>
@@ -225,7 +208,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Note */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Votre note *
@@ -248,12 +230,8 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                 )}
               </div>
 
-              {/* Commentaire */}
               <div>
-                <label 
-                  htmlFor="comment" 
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
+                <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
                   Votre commentaire *
                 </label>
                 <textarea
@@ -265,19 +243,15 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
                   disabled={isSubmitting}
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  {formData.comment.length}/500 caractères
-                </p>
+                <p className="text-xs text-gray-500 mt-1">{formData.comment.length}/500 caractères</p>
               </div>
 
-              {/* Erreur */}
               {error && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-sm text-red-600">{error}</p>
                 </div>
               )}
 
-              {/* Actions */}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
@@ -310,4 +284,4 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   );
 };
 
-export default ReviewModal; 
+export default ReviewModal;
