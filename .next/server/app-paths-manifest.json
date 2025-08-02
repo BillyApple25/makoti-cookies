@@ -1,0 +1,11 @@
+{
+  "/page": "app/page.js",
+  "/produkt/page": "app/produkt/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/kontakt/page": "app/kontakt/page.js",
+  "/login/page": "app/login/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/checkout/page": "app/checkout/page.js",
+  "/panier/page": "app/panier/page.js",
+  "/commandes/page": "app/commandes/page.js"
+}
